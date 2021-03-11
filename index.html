@@ -7,11 +7,21 @@
     <title>Weather-Dashboard</title>
 </head>
 <body>
-    <div>
-        <input type="text" id="userSearch"></textarea>
+    <header id="Header">
+        <h1>Weather-Dashboard</h1>
+    </header>
+    <div class="container">
+        <div>
+            <input type="text" id="userSearch"></textarea>
+        </div>
+        <button id="submitBtn">Submit</button>
+        <div id="currentWeather">
+            <h3 id="cityName"></h1>
+            <p id="cityTemp"></p>
+            <p id="humidity"></p>
+            <p id="windSpeed"></p>
+        </div>
     </div>
-    <button id="submitBtn">Submit</button>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="assets/js/app.js"></script>
 </body>
