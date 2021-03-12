@@ -51,8 +51,9 @@ function getWeather(userInput) {
   $("#forecast-append").empty();
   //OpenWeatherMaps "Current Weather Data" API call so we can get Latitude and Longitude to pass forward
   var currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userInput}&appid=${apiKey}`;
-  //Calls the API
+  //Calls the current weather API
   fetch(currentWeatherUrl)
+  //convers the response into a JSON object so we can utilize it
   .then((data) => data.json())
   .then(function (weather) {
     // Guard clause to make sure the user input is a targetable city
@@ -105,39 +106,47 @@ function printResults(onecallData) {
 
   //Forecast Section
 
-  // For loop, starts at 1 so that our 5 day forecast doesn't have duplicate data
+  // For loop, starts at 1 so that our 5 day forecast doesn't have duplicate data from current day section
   for (let i = 1; i < 6; i++) {
+    // variable to iterate through the daily objects
     var forecast = onecallData.daily[i];
-    var forecastDate = parseInt(forecast.dt);
-
+ 
+    // our base div we build off of
     var forecastAppend = $("#forecast-append");
 
+    //Sets divs overall spacing to be 1/6th of the width available
     var col2 = $("<div>").appendTo(forecastAppend);
     col2.addClass("col-2");
 
+    // White text, blue background
     var card = $("<div>").appendTo(col2);
     card.addClass("card bg-primary text-light");
 
     var cardBody = $("<div>").appendTo(card);
     cardBody.addClass("card-body");
 
+    // prints date at top.
     var forecastDate = $("<h5>").appendTo(cardBody);
     forecastDate.addClass("card-title");
     forecastDate.text(moment.unix(forecast.dt).format("L"));
 
-    var forecastIMG = $("<img>").appendTo(forecastDate);
+    //adds an icon equal to the areas weathers
+    var forecastIMG = $("<img>").appendTo(cardBody);
     forecastIMG.attr(
       "src",
       "https://openweathermap.org/img/wn/" +
         forecast.weather[0].icon +
         "@2x.png"
     );
+    //sets alt text for our icon
     forecastIMG.attr("alt", "Forecast Icon");
 
+    //Creates a P tag on our card and prints the temp to it
     var forecastTemp = $("<p>").appendTo(cardBody);
     forecastTemp.addClass("card-text");
     forecastTemp.text("Temp: " + forecast.temp.day + "°F");
 
+    //creates a P tag on our card and prints the humidity to it
     var forecastHumidity = $("<p>").appendTo(cardBody);
     forecastHumidity.addClass("card-text");
     forecastHumidity.text("Humidity: " + forecast.humidity + "%");
