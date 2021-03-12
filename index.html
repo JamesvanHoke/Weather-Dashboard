@@ -36,7 +36,9 @@
               </div>
             </div>
           </form>
-          <ul id="search-history"></ul>
+          <div class="card">
+            <ul id="search-history" class="list-group list-group-flush"></ul>
+          </div>
         </div>
         <div id="results" class="col-md-9 hidden">
             <div class="row">
@@ -45,11 +47,11 @@
                     <!-- Main Results Section -->
                     <!-- Current Weather Results -->
                     <div id="current-weather" class = "border rounded mt-2 mb-2 p-4">
-                        <h2 id="current-city">Temecula <span id="current-date">3/11/2021</span><img src="https://placekitten.com/40/40"> </h2>
-                        <p id="current-temp">Temperature: 100.2F</p>
-                        <p id="current-humidity">Humidity: 99%</p>
-                        <p id="current-wind-speed">Wind Speed: 5.7MPH</p>
-                        <p>UV Index: <span id="current-uvi" class="px-2 py-1 border rounded">9.49</span></p>
+                        <h2 id="current-city"><span id="current-date"></span><img src="https://placekitten.com/40/40"> </h2>
+                        <p id="current-temp"></p>
+                        <p id="current-humidity"></p>
+                        <p id="current-wind-speed"></p>
+                        <p>UV Index: <span id="current-uvi" class="px-2 py-1 border rounded"></span></p>
                     </div>
                     <!-- 5 Day Forecast Results -->
                     <div id="5-day-forecast"></div>
@@ -61,7 +63,6 @@
                 </div>
             </div>
             <div class="row" id="forecast-append">
-
             </div>
         </div>
     </div>
