@@ -1,48 +1,80 @@
+// Global Variables
+
 // API Key from Open Weather Map. Key name = Homework
 var apiKey = "003a54ddfe39c875d00206109efba335";
 //Uses moment.js to get out current date. Format is numerical Day/Month/Year. ex 03/11/2021
 var currentDate = moment().format("L");
 
+var results = $("#results");
+//Our city array where we will store our search history.
+var cityList = [];
+
+//Event Listeners
+
+// Turns our history list items into clickable buttons.
+$("#search-history").on("click","li.history-btn", function(e) {
+  e.preventDefault()
+  // imitates the search bar being filled out by grabbing our data attribute
+  var userInput = $(this).data("value");
+  // runs the weather API call
+  getWeather(userInput);
+})
+
+// Prevents the enter button from resetting the page when typing in the search bar
+$("#city-search").keydown(function (e) {
+  if (e.keyCode == 13) {
+    e.preventDefault();
+    return false;
+  }
+});
+
 //When the submit button element is clicked, we call the getWeather function
-$("#submitBtn").on("click", getWeather);
+$("#submitBtn").on("click", function (e) {
+  e.preventDefault();
+  //Pulls the text content of our search bar
+  var userInput = $("#city-search").val().trim();
+  getWeather(userInput);
+  // Runs our function to save the input to local storage
+  saveHistory(userInput);
+  // Clears out our search bar after submit
+  $("#city-search").val("");
+});
 
 //Function to call OpenWeatherMap API for specific data on a city
-function getWeather() {
-  //Pulls the text content of our search bar
-  var city = $("#city-search").val().trim();
-  // Clears out our search bar after
-  $("#city-search").val("");
-
-  if (city === "") {
-    alert("Please input a city");
+function getWeather(userInput) {
+  // Guard clause to make sure that the user input tried to input a city before searching
+  if (userInput === "") {
+    alert("Please input a city before submitting");
     return;
   }
+  // Empties our 5-day forecast between searches
+  $("#forecast-append").empty();
   //OpenWeatherMaps "Current Weather Data" API call so we can get Latitude and Longitude to pass forward
-  var currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+  var currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userInput}&appid=${apiKey}`;
   //Calls the API
   fetch(currentWeatherUrl)
+  .then((data) => data.json())
+  .then(function (weather) {
+    // Guard clause to make sure the user input is a targetable city
+    if (weather.cod === "404") {
+      alert("City not found");
+      return;
+    }
+    //Sets our towns name + date in the current day section
+    $("#current-city").text(weather.name + " | " + currentDate);
+    var lat = weather.coord.lat;
+    var lon = weather.coord.lon;
+    
+    //Main API, this requires Latitude and Longitude to function. Contains all weather information for an area. Currently displays in MPH, and Fahrenheit
+    var onecallAPI = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=${apiKey}`;
+    fetch(onecallAPI)
     .then((data) => data.json())
-    .then(function (weather) {
-      if (weather.cod === "404") {
-        alert("City not found");
-        return;
-      }
-      //Sets our towns name + date in the current day section
-      $("#current-city").text(weather.name + " | " + currentDate);
-      var lat = weather.coord.lat;
-      var lon = weather.coord.lon;
-
-      //Main API, this requires Latitude and Longitude to function. Contains all weather information for an area. Currently displays in MPH, and Fahrenheit
-      var onecallAPI = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=${apiKey}`;
-      fetch(onecallAPI)
-        .then((data) => data.json())
-        .then(function (onecallData) {
-          printResults(onecallData);
-        });
+    .then(function (onecallData) {
+      printResults(onecallData);
     });
+  });
 }
-
-//Prints the results of our API call to the page
+  //Prints the results of our API call to the page
 function printResults(onecallData) {
   var current = onecallData.current;
 
@@ -55,7 +87,7 @@ function printResults(onecallData) {
 
   //Converts the onecallapi's data from a string to a number so we can compare it
   var uvicomp = parseInt(current.uvi);
-  //rounds UVI Comp so it matches it's closes class
+  //rounds UVI Comp so it matches it's closest class
   uvicomp = Math.round(uvicomp);
   //Sets our UVI elements background to reflect the severity of the current UV strength
   //if UV index is less than or equal to 2, adds green background.
@@ -73,22 +105,10 @@ function printResults(onecallData) {
 
   //Forecast Section
 
-  {
-    /* <div class="col-2">
-  <div class="card bg-primary text-light">
-  <div class="card-body">
-  <h5 class="card-title">3/12/2021</h5>
-  <img src="https://placekitten.com/40/40">
-  <p class="card-text"> Temp: 50.51F</p>
-  <p class="card-text"> Humidity: 50%</p>
-  </div>
-  </div>
-</div> */
-  }
-
+  // For loop, starts at 1 so that our 5 day forecast doesn't have duplicate data
   for (let i = 1; i < 6; i++) {
     var forecast = onecallData.daily[i];
-    var forecastDate = parseInt(forecast.dt)
+    var forecastDate = parseInt(forecast.dt);
 
     var forecastAppend = $("#forecast-append");
 
@@ -103,7 +123,6 @@ function printResults(onecallData) {
 
     var forecastDate = $("<h5>").appendTo(cardBody);
     forecastDate.addClass("card-title");
-    console.log(forecast)
     forecastDate.text(moment.unix(forecast.dt).format("L"));
 
     var forecastIMG = $("<img>").appendTo(forecastDate);
@@ -117,16 +136,68 @@ function printResults(onecallData) {
 
     var forecastTemp = $("<p>").appendTo(cardBody);
     forecastTemp.addClass("card-text");
-    forecastTemp.text("Temp: " + forecast.temp.day +"°F");
-
+    forecastTemp.text("Temp: " + forecast.temp.day + "°F");
 
     var forecastHumidity = $("<p>").appendTo(cardBody);
     forecastHumidity.addClass("card-text");
-    forecastHumidity.text("Humidity: " + forecast.humidity+ "%")
+    forecastHumidity.text("Humidity: " + forecast.humidity + "%");
+  }
+  //displays the results section
+  results.removeClass("hidden");
+}
 
+//Adds our input into the array if it doesn't exist already
+function saveHistory(userInput) {
+  if (userInput) {
+    
+    // if userInput is not contained within the cityList Index
+    if (cityList.indexOf(userInput) === -1) {
+      // add new city to array
+      cityList.push(userInput);
+      //Generate the search history LIs which displays + saves to local storage
+      generateLI();
+    }}
   }
 
-  ("forecast.temp.day");
-  //displays the results section
-  $("#results").removeClass("hidden");
+//Generates our search history LI "buttons"
+function generateLI() {
+  var sh = $("#search-history")
+  //Clears old LI elements
+ sh.empty();
+ //generates new LI for each item in our array
+  cityList.forEach(function (city) {
+    // variable to create our elements
+    var searchHistoryLI = $("<li>");
+    // adds classes to our newly made variables
+    searchHistoryLI.addClass("list-group-item history-btn")
+    // sets a data-value attribute equal to the city name
+    searchHistoryLI.attr("data-value", city);
+    // prints the name of the city
+    searchHistoryLI.text(city);
+    // adds it to the top of the list (Newest at top, oldest at bottom)
+    sh.prepend(searchHistoryLI);
+  });
+  // pushes to local storage
+  localStorage.setItem("cities", JSON.stringify(cityList));
 }
+
+//Pulls from local storage
+function showHistory() {
+  // if our local storage exists
+  if (localStorage.getItem("cities")) {
+    // pull the local storage and parse it into a JS object
+    cityList = JSON.parse(localStorage.getItem("cities"));
+    // runs our LI generator function
+    generateLI();
+    // if our array has key:value pairs inside
+    if (cityList.length !== 0) {
+      // grabs the length of our array and subtracts 1 to get to the final index
+      var lastVisited = cityList.length - 1;
+      // runs the weather function with our last searched info
+     getWeather(cityList[lastVisited]);
+    }
+  }
+}
+
+// Loads our local storage history on page load
+showHistory()
