@@ -16,34 +16,29 @@
 
 
   <body>
+    <div class="container-fluid">
     <!-- Header -->
     <header class="row navbar navbar-dark bg-dark">
       <h1 class="col-12 text-center">Weather-Dashboard</h1>
     </header>
     <!-- Header End -->
-
-
-
-    <div class="container-fluid">
       <div class="row fill">
+
+
         <!-- Sidebar - Search bar + search history -->
         <div class="col-md-3 border border-dark bg-light pt-3">
-          <form id="weather-submit">
-            <label for="city-search" class="form-label" placeholder="Tucson"
-              ><h3>Search for a city:</h3></label
-            >
-            <div class="mb-1">
-              <input type="text" class="form-control" id="city-search" />
-            </div>
-            <div>
-              <button type="submit" id="submitBtn" class="btn btn-primary">
-                Submit
-              </button>
+          <h5>Search for a city:</h5>
+          <form>
+            <div class="form-group input-group mb-1">
+              <input type="text" class="form-control" id="city-search" placeholder="Search A City!"/>
+              <div class="input-group-append">
+                <button type="button" id="submitBtn" class="btn btn-primary">Submit</button>
+              </div>
             </div>
           </form>
           <ul id="search-history"></ul>
         </div>
-        <div class="col-md-9"> <!--Hide Me with .hidden before deployment-->
+        <div id="results" class="col-md-9 hidden">
             <div class="row">
                 <div class="col-12">
 
@@ -54,7 +49,7 @@
                         <p id="current-temp">Temperature: 100.2F</p>
                         <p id="current-humidity">Humidity: 99%</p>
                         <p id="current-wind-speed">Wind Speed: 5.7MPH</p>
-                        <p id="current-uvi">UV Index: <span id="uvi-bg" class="p-1 rounded bg-danger">9.49</span></p>
+                        <p>UV Index: <span id="current-uvi" class="px-2 py-1 border rounded">9.49</span></p>
                     </div>
                     <!-- 5 Day Forecast Results -->
                     <div id="5-day-forecast"></div>
@@ -65,18 +60,8 @@
                     <h2>5-Day Forecast:</h2>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-2">
-                    <div class="card bg-primary text-light">
-                        <div class="card-body">
+            <div class="row" id="forecast-append">
 
-                            <h5 class="card-title">3/12/2021</h5>
-                            <img src="https://placekitten.com/40/40">
-                            <p class="card-text"> Temp: 50.51F</p>
-                            <p class="card-text"> Humidity: 50%</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
