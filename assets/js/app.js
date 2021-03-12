@@ -90,17 +90,17 @@ function printResults(onecallData) {
   //rounds UVI Comp so it matches it's closest class
   uvicomp = Math.round(uvicomp);
   //Sets our UVI elements background to reflect the severity of the current UV strength
-  //if UV index is less than or equal to 2, adds green background.
+  //if UV index is less than or equal to 2, adds green background. removes yellow/red
   if (uvicomp <= 2) {
-    $("#current-uvi").addClass("bg-success");
+    $("#current-uvi").addClass("bg-success").removeClass("bg-warning bg-danger");
   }
-  //if UV Index is between 3 and 5, adds yellow background
+  //if UV Index is between 3 and 5, adds yellow background removes green/red
   else if (uvicomp >= 3 && uvicomp <= 5) {
-    $("#current-uvi").addClass("bg-warning");
+    $("#current-uvi").addClass("bg-warning").removeClass("bg-success bg-danger");
   }
-  //else adds a red background.
+  //else adds a red background. removed green/yellow
   else {
-    $("#current-uvi").addClass("bg-danger");
+    $("#current-uvi").addClass("bg-danger").removeClass("bg-warning bg-success");
   }
 
   //Forecast Section
