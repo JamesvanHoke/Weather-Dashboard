@@ -23,7 +23,7 @@ THEN I am again presented with current and future conditions for that city
 A basic web interface was created to hold the generated data. The API Functionality was then setup, and tested until  the required data was being recieved. After which the web interface was overhauled to match the project critera mockup. All functionality was relinked and then dynamic generation of cards using bootstrap to print out the 5-day forecast began. Once that was achieved. code went through many iterations to get local storage set/get functional. Afterwards bug cleanup, and commenting to improve readability of the code was implemented.
 
 ## Preview
-![Video Preview of Weather-Dashboard](https://imgur.com/uSyVTNF.gif)
+<img src=https://gyazo.com/28fd07b29667436d149bbf9764a7dbeb.png>
 
 ## Link
 https://jamesvanhoke.github.io/Weather-Dashboard/
