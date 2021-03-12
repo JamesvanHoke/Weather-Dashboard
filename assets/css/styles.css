@@ -1,0 +1,14 @@
+.fill,
+html,
+body,
+.container-fluid {
+    height: 100%;
+}
+
+header h1 {
+    color: white;
+}
+
+.hidden {
+display:none;
+}
