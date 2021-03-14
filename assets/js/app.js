@@ -116,7 +116,7 @@ function printResults(onecallData) {
 
     //Sets divs overall spacing to be 1/6th of the width available
     var col2 = $("<div>").appendTo(forecastAppend);
-    col2.addClass("col-2");
+    col2.addClass("col-12 col-md-6 col-lg-2"); //Added breakpoints per grading team feedback.
 
     // White text, blue background
     var card = $("<div>").appendTo(col2);
